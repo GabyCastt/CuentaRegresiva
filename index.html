@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuenta Regresiva para Liss</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary-dark: #cacce7;       /* azul grisáceo oscuro */
+  --primary-light: #8d99ae;      /* azul claro */
+  --accent: #800020;             /* vino tinto */
+  --accent-secondary: #b33261;   /* rosa vino aaaaaaaaaaaaaaaa*/
+  --text-light: #ffffff;
+  --text-muted: #080808;          /*sssssssss ddddddddddddddd*/
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+  color: var(--text-light);
+  text-align: center;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  margin-bottom: 30px;
+  position: relative;
+  width: 100%;
+}
+
+h1 {
+  color: var(--accent-secondary);
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+#countdown {
+  font-size: 1.8rem;
+  margin: 30px 0;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.progress-container {
+  width: 100%;
+  max-width: 600px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin: 20px auto;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+  border-radius: 10px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+.day-box {
+  display: none;
+  margin: 30px auto;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(128, 0, 32, 0.5);
+  max-width: 900px;
+  animation: fadeIn 0.5s ease;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.day-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(128, 0, 32, 0.7);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.day-title {
+  font-size: 1.5rem;
+  color: var(--accent-secondary);
+}
+
+.day-content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.media-container {
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+}
+
+iframe {
+  width: 100%;
+  height: 280px;
+  border-radius: 12px;
+  border: 2px solid var(--accent);
+  box-shadow: 0 8px 20px rgba(128, 0, 32, 0.5);
+}
+
+.text-container {
+  flex: 1;
+  min-width: 300px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.quote {
+  font-style: italic;
+  margin: 15px 0;
+  color: var(--text-light);
+  font-size: 1.2rem;
+  line-height: 1.6;
+  padding: 15px;
+  background: rgba(128, 0, 32, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 4px;
+}
+
+.detail {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: var(--accent-secondary);
+}
+
+.final-link {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 30px;
+  background: var(--accent);
+  color: var(--text-light);
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(128, 0, 32, 0.5);
+}
+
+.final-link:hover {
+  background: var(--accent-secondary);
+  color: var(--primary-dark);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(128, 0, 32, 0.7);
+}
+
+.navigation {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.nav-btn {
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 30px;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background: var(--accent);
+}
+
+.nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.days-indicator {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.day-indicator {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.day-indicator.active {
+  background: var(--accent);
+  transform: scale(1.1);
+}
+
+.day-indicator.available {
+  background: rgba(128, 0, 32, 0.3);
+  cursor: pointer;
+}
+
+.day-indicator.available:hover {
+  background: var(--accent);
+}
+
+.day-indicator.future {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+footer {
+  margin-top: 40px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.info-box {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 15px;
+  margin: 20px 0;
+  max-width: 600px;
+  box-shadow: 0 8px 25px rgba(128, 0, 32, 0.5);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.info-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(128, 0, 32, 0.7);
+}
+
+.info-box-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  #countdown {
+    font-size: 1.5rem;
+  }
+
+  .day-content {
+    flex-direction: column;
+  }
+
+  .text-container {
+    text-align: center;
+  }
+
+  iframe {
+    height: 200px;
+  }
+
+  .day-indicator {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+
+
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-birthday-cake"></i> Cuenta Regresiva hasta tu cumpleaños <i class="fas fa-birthday-cake"></i></h1>
+      <p class="subtitle">Desde este día hasta tu cumpleaños, cada día tendrás una nueva sorpresa. ¡Espero que te guste! 𖹭 </p>
+      <div id="countdown"></div>
+      <div class="progress-container">
+        <div class="progress-bar" id="progress"></div>
+      </div>
+      <div class="info-box-wrapper">
+      <div class="info-box">
+        <p><i class="fas fa-info-circle"></i> Puedes navegar entre los días disponibles usando los botones o seleccionando un día específico:</p>
+        <div class="days-indicator" id="days-indicator">
+          <!-- Los indicadores de días se generarán con JavaScript -->
+        </div>
+      </div>
+      </div>
+    </header>
+
+    <!-- Día 1 -->
+    <div id="day1" class="day-box">
+      <div class="day-header">
+        <h2 class="day-title">D-9</h2>
+      </div>
+      <div class="day-content">
+        <div class="media-container">
+          <iframe src="https://www.youtube.com/embed/BksBNbTIoPE" allowfullscreen></iframe>
+        </div>
+        <div class="text-container">
+          <p class="quote">"La música nos conecta aunque estemos lejos. ¡Espero que te guste esta canción!"</p>
+          <p class="detail"><i class="fas fa-music"></i> <b>Still With You - Jungkook</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Día 2 -->
+    <div id="day2" class="day-box">
+      <div class="day-header">
+        <h2 class="day-title">D-8</h2>
+      </div>
+      <div class="day-content">
+        <div class="media-container">
+          <iframe src="https://www.youtube.com/embed/_yTP_L8fC-k" allowfullscreen></iframe>
+        </div>
+        <div class="text-container">
+          <p class="quote">"Otra canción que me recordó nuestras conversaciones. ¡Disfrútala!"</p>
+          <p class="detail"><i class="fas fa-music"></i> <b>My You - Jungkook</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Día 3 -->
+    <div id="day3" class="day-box">
+      <div class="day-header">
+        <h2 class="day-title">D-7</h2>
+      </div>
+      <div class="day-content">
+        <div class="media-container">
+          <iframe src="https://www.youtube.com/embed/Tpa6hMe1gfo" allowfullscreen></iframe>
+        </div>
+        <div class="text-container">
+          <p class="quote">"Porque este cover es lo mejor de la vida ¡Espero que a ti también te guste!"</p>
+          <p class="detail"><i class="fas fa-music"></i> <b>Paper Hearts (Cover) - Jungkook</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Día 4 -->
+    <div id="day4" class="day-box">
+      <div class="day-header">
+        <h2 class="day-title">D-6</h2>
+      </div>
+      <div class="day-content">
+        <div class="media-container">
+          <iframe src="https://www.youtube.com/embed/XM0lJYxwT4I" allowfullscreen></iframe>
+        </div>
+        <div class="text-container">
+          <p class="quote">"Quizá estemos perdidos, pero brillamos como estrellas."</p>
+          <p class="detail"><i class="fas fa-music"></i> <b>Lost Stars (Cover) - Jungkook</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Día 5 -->
+    <div id="day5" class="day-box">
+      <div class="day-header">
+        <h2 class="day-title">D-5</h2>
+      </div>
+      <div class="day-content">
+        <div class="media-container">
+          <iframe src="https://www.youtube.com/embed/i630t7Xz_u4?si=daN0C2R-4I9ShN9Z" allowfullscreen></iframe>
+        </div>
+        <div class="text-container">
+          <p class="quote">"A veces cuesta un poquito más, pero porfavor, mantente con vida"</p>
+          <p class="detail"><i class="fas fa-music"></i> <b>Stay Alive - Jungkook (Prod. Suga)</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Día 6 -->
+    <div id="day6" class="day-box">
+      <div class="day-header">
+        <h2 class="day-title">D-4</h2>
+      </div>
+      <div class="day-content">
+        <div class="media-container">
+          <iframe src="https://open.spotify.com/embed/episode/2KDsKlEArjfU7yuvD24eAy?utm_source=generator&t=10" allowfullscreen></iframe>
+        </div>
+        <div class="text-container">
+          <p class="quote">"Aquí para ti, en los buenos y en tus peores días."</p>
+          <p class="detail"><i class="fas fa-music"></i> <b>At my Worst (Cover) - Jungkook</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Día 7 -->
+    <div id="day7" class="day-box">
+      <div class="day-header">
+        <h2 class="day-title">D-3</h2>
+      </div>
+      <div class="day-content">
+        <div class="media-container">
+          <iframe src="https://www.youtube.com/embed/h-wQ6Bf5ko4?si=Y6ZyQpbf-ODUQe8u" allowfullscreen></iframe>
+        </div>
+        <div class="text-container">
+          <p class="quote">"Para los momentos que nunca terminan."</p>
+          <p class="detail"><i class="fas fa-music"></i> <b>Ending Scene - IU - BY JK</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Día 8 -->
+    <div id="day8" class="day-box">
+      <div class="day-header">
+        <h2 class="day-title">D-2</h2>
+      </div>
+      <div class="day-content">
+        <div class="media-container">
+          <iframe src="https://www.youtube.com/embed/CAcBt6KVQU4" allowfullscreen></iframe>
+        </div>
+        <div class="text-container">
+          <p class="quote">"Dejando mi color en tu mundo."</p>
+          <p class="detail"><i class="fas fa-music"></i> <b>Decalcomania - Jungkook</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Día 9 -->
+    <div id="day9" class="day-box">
+      <div class="day-header">
+        <h2 class="day-title">D-1</h2>
+      </div>
+      <div class="day-content">
+        <div class="media-container">
+          <iframe src="https://open.spotify.com/embed/track/5ONOlTiqymhzwcFjqcIT6E?utm_source=generator" allowfullscreen></iframe>
+        </div>
+        <div class="text-container">
+          <p class="quote">"Amo esta canción, siempre me recuerda a Koo en ese clip todo confundido"</p>
+          <p class="detail"><i class="fas fa-music"></i> <b>Hate You - Jungkook</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Día 10 -->
+    <div id="day10" class="day-box">
+      <div class="day-header">
+        <h2 class="day-title">D-0 - ¡Feliz Cumpleaños!</h2>
+      </div>
+      <div class="day-content">
+        <div class="media-container">
+          <iframe src="https://www.youtube.com/embed/m5_J7xuYxzs" allowfullscreen></iframe>
+        </div>
+        <div class="text-container">
+          <p class="quote">"Cada final abre una nueva sorpresa.¡Feliz cumpleaños! Espero que tengas un día increíble y que este nuevo año te traiga muchas alegrías. 🎉"</p>
+          <p class="detail"><i class="fas fa-music"></i> <b>Begin - BTS (Wings)</b></p>
+          <a href="https://gabycastt.github.io/LissPP/" target="_blank" class="final-link"><i class="fas fa-gift"></i> Ir a tu regalo final</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="navigation">
+      <button class="nav-btn" id="prev-btn" disabled><i class="fas fa-chevron-left"></i> Anterior</button>
+      <button class="nav-btn" id="next-btn">Siguiente <i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <footer>
+      <p>Hecho con amor, </i> Gaby 🧸ྀི</p>
+    </footer>
+  </div>
+
+  <script>
+    // Ajustar la fecha para Ecuador (UTC-5)
+    const eventDate = new Date('2025-09-10T00:00:00-05:00').getTime();
+    const countdown = document.getElementById('countdown');
+    const progressBar = document.getElementById('progress');
+    let currentDay = 1;
+    const totalDays = 10;
+    let maxDayAvailable = 1;
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = eventDate - now;
+
+      // Calcular días restantes (D-9, D-8, etc.)
+      const days = Math.ceil(distance / (1000 * 60 * 60 * 24));
+      
+      if (days <= 0) {
+        countdown.innerHTML = "🎉 ¡Feliz Cumpleaños, Liss! 🎉";
+        progressBar.style.width = '100%';
+        maxDayAvailable = totalDays;
+        showDay(totalDays);
+        updateDaysIndicator();
+        return;
+      }
+
+      // Mostrar formato D-X
+      countdown.innerHTML = `<strong>D-${days}</strong>`;
+      
+      // Actualizar barra de progreso
+      const daysPassed = totalDays - days;
+      const progressPercentage = Math.max(0, Math.min(100, (daysPassed / totalDays) * 100));
+      progressBar.style.width = `${progressPercentage}%`;
+
+      // Determinar qué días están disponibles para ver
+      // SOLO el día 1 si hoy es 1 de septiembre
+      const today = new Date();
+      if (today.getDate() === 1 && today.getMonth() === 8) { // 8 = septiembre (0-indexed)
+        maxDayAvailable = 1;
+      } else {
+        maxDayAvailable = Math.max(1, Math.min(totalDays, totalDays - days + 1));
+      }
+      
+      // Mostrar el día actual si está disponible
+      if (currentDay <= maxDayAvailable) {
+        showDay(currentDay);
+      } else {
+        showDay(maxDayAvailable);
+      }
+      
+      updateDaysIndicator();
+    }
+
+    function updateDaysIndicator() {
+      const indicatorContainer = document.getElementById('days-indicator');
+      indicatorContainer.innerHTML = '';
+      
+      for (let i = 1; i <= totalDays; i++) {
+        const dayIndicator = document.createElement('div');
+        dayIndicator.className = 'day-indicator';
+        dayIndicator.textContent = i;
+        
+        if (i === currentDay) {
+          dayIndicator.classList.add('active');
+        }
+        
+        if (i <= maxDayAvailable) {
+          dayIndicator.classList.add('available');
+          dayIndicator.addEventListener('click', () => showDay(i));
+        } else {
+          dayIndicator.classList.add('future');
+        }
+        
+        indicatorContainer.appendChild(dayIndicator);
+      }
+    }
+
+    function showDay(day) {
+      // Ocultar todos los días
+      document.querySelectorAll('.day-box').forEach(box => {
+        box.style.display = 'none';
+      });
+      
+      // Mostrar el día actual
+      const el = document.getElementById(`day${day}`);
+      if (el) {
+        el.style.display = 'block';
+        currentDay = day;
+        
+        // Actualizar botones de navegación
+        document.getElementById('prev-btn').disabled = day <= 1;
+        document.getElementById('next-btn').disabled = day >= maxDayAvailable;
+        
+        // Actualizar indicadores de días
+        updateDaysIndicator();
+      }
+    }
+
+    // Navegación entre días (solo para días disponibles)
+    document.getElementById('prev-btn').addEventListener('click', () => {
+      if (currentDay > 1 && currentDay <= maxDayAvailable) {
+        showDay(currentDay - 1);
+      }
+    });
+
+    document.getElementById('next-btn').addEventListener('click', () => {
+      if (currentDay < maxDayAvailable) {
+        showDay(currentDay + 1);
+      }
+    });
+
+    // Inicializar
+    setInterval(updateCountdown, 1000 * 60 * 60); // actualizar cada hora
+    updateCountdown();
+  </script>
+</body>
+</html>
