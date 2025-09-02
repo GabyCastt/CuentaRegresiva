@@ -512,7 +512,7 @@ footer {
     </footer>
   </div>
 
-  <script>
+<script>
     // Ajustar la fecha para Ecuador (UTC-5)
     const eventDate = new Date('2025-09-10T00:00:00-05:00').getTime();
     const countdown = document.getElementById('countdown');
@@ -545,13 +545,21 @@ footer {
       const progressPercentage = Math.max(0, Math.min(100, (daysPassed / totalDays) * 100));
       progressBar.style.width = `${progressPercentage}%`;
 
-      // Determinar qué días están disponibles para ver
-      // SOLO el día 1 si hoy es 1 de septiembre
+      // CORRECCIÓN: Calcular el día disponible basado en la fecha actual
       const today = new Date();
-      if (today.getDate() === 1 && today.getMonth() === 8) { // 8 = septiembre (0-indexed)
-        maxDayAvailable = 1;
+      const startDate = new Date('2025-09-01T00:00:00-05:00'); // Fecha de inicio (1 de septiembre)
+      
+      // Calcular la diferencia en días entre hoy y la fecha de inicio
+      const timeDiff = today.getTime() - startDate.getTime();
+      const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24)) + 1; // +1 porque el día 1 es el primer día
+      
+      // Ajustar maxDayAvailable según la diferencia de días
+      if (daysDiff < 1) {
+        maxDayAvailable = 1; // Aún no es 1 de septiembre
+      } else if (daysDiff > totalDays) {
+        maxDayAvailable = totalDays; // Ya pasaron todos los días
       } else {
-        maxDayAvailable = Math.max(1, Math.min(totalDays, totalDays - days + 1));
+        maxDayAvailable = daysDiff; // Día actual dentro del rango
       }
       
       // Mostrar el día actual si está disponible
@@ -559,6 +567,7 @@ footer {
         showDay(currentDay);
       } else {
         showDay(maxDayAvailable);
+        currentDay = maxDayAvailable;
       }
       
       updateDaysIndicator();
@@ -625,6 +634,6 @@ footer {
     // Inicializar
     setInterval(updateCountdown, 1000 * 60 * 60); // actualizar cada hora
     updateCountdown();
-  </script>
+</script>
 </body>
 </html>
